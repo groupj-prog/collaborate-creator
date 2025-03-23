@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -99,9 +98,7 @@ const Register: React.FC = () => {
           data: {
             user_type: userType
           },
-          emailRedirectTo: window.location.origin,
-          // Skip email verification
-          emailConfirm: false
+          emailRedirectTo: window.location.origin
         }
       });
       
@@ -138,10 +135,10 @@ const Register: React.FC = () => {
       
       toast({
         title: "Registration successful",
-        description: "You have been registered successfully and are now logged in.",
+        description: "Your account has been created. Please check your email to verify your account before logging in.",
       });
       
-      navigate("/");
+      navigate("/login");
     } catch (error: any) {
       toast({
         title: "Registration failed",
