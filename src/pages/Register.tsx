@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -91,6 +92,8 @@ const Register: React.FC = () => {
     
     try {
       setLoading(true);
+      
+      // First sign up the user
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -112,9 +115,7 @@ const Register: React.FC = () => {
         throw new Error("User ID not found after registration");
       }
       
-      // Use service role client to bypass RLS
-      const serviceRoleClient = supabase.auth.admin;
-      
+      // Create the profile
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -129,16 +130,30 @@ const Register: React.FC = () => {
       
       if (profileError) {
         console.error("Profile creation error:", profileError);
-        // Registration still succeeded, so we'll show a success message
-        // but log the profile error for debugging
       }
       
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created. Please check your email to verify your account before logging in.",
+      // Now sign in the user directly
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password
       });
       
-      navigate("/login");
+      if (signInError) {
+        // If sign in fails, inform but still consider registration successful
+        console.error("Auto sign-in error:", signInError);
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created. Please check your email to verify your account before logging in.",
+        });
+        navigate("/login");
+      } else {
+        // If sign in successful
+        toast({
+          title: "Registration successful",
+          description: "You have been registered successfully and are now logged in.",
+        });
+        navigate("/");
+      }
     } catch (error: any) {
       toast({
         title: "Registration failed",
