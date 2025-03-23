@@ -98,7 +98,10 @@ const Register: React.FC = () => {
         options: {
           data: {
             user_type: userType
-          }
+          },
+          emailRedirectTo: window.location.origin,
+          // Skip email verification
+          emailConfirm: false
         }
       });
       
@@ -135,7 +138,7 @@ const Register: React.FC = () => {
       
       toast({
         title: "Registration successful",
-        description: "You have been registered successfully. Check your email for verification.",
+        description: "You have been registered successfully and are now logged in.",
       });
       
       navigate("/");
