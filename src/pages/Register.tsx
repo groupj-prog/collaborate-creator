@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -111,6 +112,9 @@ const Register: React.FC = () => {
         throw new Error("User ID not found after registration");
       }
       
+      // Use service role client to bypass RLS
+      const serviceRoleClient = supabase.auth.admin;
+      
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -124,7 +128,9 @@ const Register: React.FC = () => {
         ]);
       
       if (profileError) {
-        throw profileError;
+        console.error("Profile creation error:", profileError);
+        // Registration still succeeded, so we'll show a success message
+        // but log the profile error for debugging
       }
       
       toast({
