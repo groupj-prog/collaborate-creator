@@ -1,12 +1,16 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,44 +58,69 @@ const Navbar = () => {
             How It Works
           </Link>
           <Link
-            to="/pricing"
-            className="text-sm font-medium hover:text-pink-500 transition-colors duration-200"
-          >
-            Pricing
-          </Link>
-          <Link
             to="/about"
             className="text-sm font-medium hover:text-pink-500 transition-colors duration-200"
           >
             About
           </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            className="px-2"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </Button>
           <div className="flex items-center space-x-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
-              asChild
-            >
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button
-              size="sm"
-              className="rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-200"
-              asChild
-            >
-              <Link to="/register">Get Started</Link>
-            </Button>
+            {user ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px] flex items-center gap-2"
+                onClick={signOut}
+              >
+                <LogOut size={16} /> Logout
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
+                  asChild
+                >
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button
+                  size="sm"
+                  className="rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-200"
+                  asChild
+                >
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
         {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden text-neutral-800 focus:outline-none"
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="md:hidden flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            className="px-2"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </Button>
+          <button
+            onClick={toggleMenu}
+            className="text-neutral-800 dark:text-neutral-200 focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -113,13 +142,6 @@ const Navbar = () => {
               How It Works
             </Link>
             <Link
-              to="/pricing"
-              className="text-sm font-medium hover:text-pink-500 transition-colors duration-200 p-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Pricing
-            </Link>
-            <Link
               to="/about"
               className="text-sm font-medium hover:text-pink-500 transition-colors duration-200 p-2"
               onClick={() => setIsMenuOpen(false)}
@@ -127,23 +149,39 @@ const Navbar = () => {
               About
             </Link>
             <div className="flex flex-col space-y-3 pt-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
-                asChild
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Link to="/login">Login</Link>
-              </Button>
-              <Button
-                size="sm"
-                className="rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-200 w-full"
-                asChild
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Link to="/register">Get Started</Link>
-              </Button>
+              {user ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full flex items-center justify-center gap-2"
+                  onClick={() => {
+                    signOut();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut size={16} /> Logout
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
+                    asChild
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Link to="/login">Login</Link>
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-200 w-full"
+                    asChild
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Link to="/register">Get Started</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>

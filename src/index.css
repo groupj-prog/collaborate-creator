@@ -89,11 +89,11 @@
 
 @layer components {
   .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm dark:bg-neutral-900/80 dark:border-neutral-800/30;
   }
   
   .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-md rounded-2xl transition-all duration-300 hover:shadow-lg;
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-md rounded-2xl transition-all duration-300 hover:shadow-lg dark:bg-neutral-900/70 dark:border-neutral-800/30;
   }
   
   .glass-card-dark {
@@ -107,8 +107,8 @@
   }
   
   .outline-button {
-    @apply px-6 py-3 bg-transparent border-[1.5px] border-neutral-200 rounded-full
-           font-medium transition-all duration-300 hover:bg-neutral-100/50
+    @apply px-6 py-3 bg-transparent border-[1.5px] border-neutral-200 dark:border-neutral-800 rounded-full
+           font-medium transition-all duration-300 hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50
            hover:translate-y-[-2px] active:translate-y-[0px];
   }
   
@@ -177,5 +177,24 @@
 
 .feature-icon {
   @apply flex items-center justify-center w-12 h-12 rounded-full 
-         bg-pink-100 text-pink-500 mb-4;
+         bg-pink-100 text-pink-500 mb-4 dark:bg-pink-950/40;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out forwards;
 }
