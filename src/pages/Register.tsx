@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -49,7 +48,6 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Redirect if already logged in
   React.useEffect(() => {
     if (user) {
       navigate("/");
@@ -93,7 +91,7 @@ const Register: React.FC = () => {
     
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -107,14 +105,21 @@ const Register: React.FC = () => {
         throw error;
       }
       
-      // Add user to profiles table
+      const userId = data.user?.id;
+      
+      if (!userId) {
+        throw new Error("User ID not found after registration");
+      }
+      
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
           { 
-            user_id: (await supabase.auth.getUser()).data.user?.id,
+            id: userId,
             user_type: userType,
-            email: email
+            username: email.split('@')[0],
+            avatar_url: null,
+            full_name: null
           }
         ]);
       
