@@ -37,7 +37,7 @@ const ClientAbout = () => {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       <Navbar />
       <div className="flex">
         <ClientSidebar />
@@ -48,7 +48,7 @@ const ClientAbout = () => {
               Learn more about our platform and how it connects clients with creators.
             </p>
 
-            <Card className="mb-8">
+            <Card className="mb-8 border-primary/20">
               <CardHeader>
                 <CardTitle>Our Mission</CardTitle>
               </CardHeader>
@@ -64,7 +64,7 @@ const ClientAbout = () => {
               </CardContent>
             </Card>
 
-            <Card className="mb-8">
+            <Card className="mb-8 border-primary/20">
               <CardHeader>
                 <CardTitle>How It Works</CardTitle>
               </CardHeader>
@@ -96,7 +96,7 @@ const ClientAbout = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-primary/20">
               <CardHeader>
                 <CardTitle>Get Support</CardTitle>
               </CardHeader>

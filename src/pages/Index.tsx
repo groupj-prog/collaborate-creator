@@ -7,8 +7,11 @@ import HowItWorksSection from "@/components/HowItWorksSection";
 import FutureEnhancements from "@/components/FutureEnhancements";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
+import { useTheme } from "@/context/ThemeContext";
 
 const Index: React.FC = () => {
+  const { theme } = useTheme();
+  
   useEffect(() => {
     // Initialize animation visibility detection
     const observer = new IntersectionObserver((entries) => {
@@ -32,7 +35,7 @@ const Index: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <Navbar />
       <main>
         <HeroSection />

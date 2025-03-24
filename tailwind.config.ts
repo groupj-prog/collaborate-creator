@@ -63,6 +63,9 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Define direct hex values for easier reference
+				"custom-primary": "#F2CFD7",
+				"custom-secondary": "#3D6E65",
 				"pink": {
 					"50": "#fdf2f8",
 					"100": "#fce7f3",
