@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogOut, Moon, Sun } from "lucide-react";
@@ -93,7 +94,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
-                {isCreator && (
+                {isCreator ? (
                   <Button
                     variant="outline"
                     size="sm"
@@ -101,6 +102,15 @@ const Navbar = () => {
                     asChild
                   >
                     <Link to="/creator-dashboard">Dashboard</Link>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
+                    asChild
+                  >
+                    <Link to="/client-search">Find Creators</Link>
                   </Button>
                 )}
                 <Button
@@ -144,7 +154,7 @@ const Navbar = () => {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </Button>
           <button
-            onClick={toggleMenu}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-neutral-800 dark:text-neutral-200 focus:outline-none"
             aria-label="Toggle menu"
           >
@@ -180,7 +190,7 @@ const Navbar = () => {
             <div className="flex flex-col space-y-3 pt-3">
               {user ? (
                 <>
-                  {isCreator && (
+                  {isCreator ? (
                     <Button
                       variant="outline"
                       size="sm"
@@ -189,6 +199,16 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <Link to="/creator-dashboard">Dashboard</Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
+                      asChild
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Link to="/client-search">Find Creators</Link>
                     </Button>
                   )}
                   <Button
