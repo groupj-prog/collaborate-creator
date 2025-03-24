@@ -2,8 +2,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const CtaSection: React.FC = () => {
+  const { user } = useAuth();
+  
   return (
     <section className="py-20 px-6 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-pink-50 opacity-70"></div>
@@ -24,14 +27,16 @@ const CtaSection: React.FC = () => {
             Whether you're looking to hire talent or showcase your skills, ConnectHub makes the process seamless, secure, and successful.
           </p>
           
-          <div className="flex flex-col sm:flex-row justify-center gap-4 fade-in-hidden animate-fade-in animation-delay-300">
-            <Button className="primary-button bg-pink-500 hover:bg-pink-600" size="lg" asChild>
-              <Link to="/register">Create Your Account</Link>
-            </Button>
-            <Button className="outline-button" variant="outline" size="lg" asChild>
-              <Link to="/how-it-works">Learn More</Link>
-            </Button>
-          </div>
+          {!user && (
+            <div className="flex flex-col sm:flex-row justify-center gap-4 fade-in-hidden animate-fade-in animation-delay-300">
+              <Button className="primary-button bg-pink-500 hover:bg-pink-600" size="lg" asChild>
+                <Link to="/register">Create Your Account</Link>
+              </Button>
+              <Button className="outline-button" variant="outline" size="lg" asChild>
+                <Link to="/how-it-works">Learn More</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </section>
