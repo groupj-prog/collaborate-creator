@@ -202,14 +202,14 @@ const ClientSearch = () => {
                       <div>
                         <Label className="text-base font-medium mb-2 block">Skills</Label>
                         <Select
-                          value={selectedSkill || ""}
-                          onValueChange={(value) => setSelectedSkill(value === "" ? null : value)}
+                          value={selectedSkill || "all"}
+                          onValueChange={(value) => setSelectedSkill(value === "all" ? null : value)}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select a skill" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">Any Skill</SelectItem>
+                            <SelectItem value="all">Any Skill</SelectItem>
                             {skills.map((skill) => (
                               <SelectItem key={skill} value={skill}>
                                 {skill}
