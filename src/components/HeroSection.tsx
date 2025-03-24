@@ -9,13 +9,13 @@ const HeroSection: React.FC = () => {
   
   return (
     <section className="pt-32 pb-20 px-6 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-pink-50 to-transparent opacity-70"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F2CFD7]/50 to-transparent opacity-70"></div>
       
       <div className="container mx-auto relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center">
           <div className="lg:w-1/2 fade-in-hidden animate-fade-in">
             <div className="mb-4">
-              <span className="inline-block px-4 py-2 rounded-full bg-pink-100 text-pink-600 text-xs font-medium mb-4">
+              <span className="inline-block px-4 py-2 rounded-full bg-[#F2CFD7] text-[#3D6E65] text-xs font-medium mb-4">
                 Connect with top digital talent
               </span>
             </div>
@@ -29,10 +29,10 @@ const HeroSection: React.FC = () => {
             
             {!user && (
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button className="primary-button bg-pink-500 hover:bg-pink-600" asChild>
+                <Button className="primary-button bg-[#F2CFD7] hover:bg-[#F2CFD7]/90 text-[#3D6E65]" asChild>
                   <Link to="/register">Get Started</Link>
                 </Button>
-                <Button className="outline-button" variant="outline" asChild>
+                <Button className="outline-button border-[#3D6E65] text-[#3D6E65]" variant="outline" asChild>
                   <Link to="/how-it-works">Learn More</Link>
                 </Button>
               </div>

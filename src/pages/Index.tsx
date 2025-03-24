@@ -8,9 +8,15 @@ import FutureEnhancements from "@/components/FutureEnhancements";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
 import { useTheme } from "@/context/ThemeContext";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import CarrierPhotoSection from "@/components/CarrierPhotoSection";
 
 const Index: React.FC = () => {
   const { theme } = useTheme();
+  const { user } = useAuth();
+  const [userType, setUserType] = useState<string | null>(null);
   
   useEffect(() => {
     // Initialize animation visibility detection
@@ -34,15 +40,42 @@ const Index: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Fetch user type if user is logged in
+    const fetchUserType = async () => {
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('user_type')
+          .eq('id', user.id)
+          .single();
+        
+        if (!error && data) {
+          setUserType(data.user_type);
+        }
+      } else {
+        setUserType(null);
+      }
+    };
+
+    fetchUserType();
+  }, [user]);
+
   return (
     <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
       <Navbar />
       <main>
-        <HeroSection />
-        <FeatureSection />
-        <HowItWorksSection />
-        <FutureEnhancements />
-        <CtaSection />
+        {user && userType ? (
+          <CarrierPhotoSection userType={userType} />
+        ) : (
+          <>
+            <HeroSection />
+            <FeatureSection />
+            <HowItWorksSection />
+            <FutureEnhancements />
+            <CtaSection />
+          </>
+        )}
       </main>
       <Footer />
     </div>

@@ -30,13 +30,13 @@ const UpcomingActivities = () => {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "meeting":
-        return <Clock size={16} className="text-pink-500" />;
+        return <Clock size={16} className="text-[#F2CFD7]" />;
       case "deadline":
         return <CalendarClock size={16} className="text-amber-500" />;
       case "opportunity":
-        return <Briefcase size={16} className="text-custom-secondary" />;
+        return <Briefcase size={16} className="text-[#3D6E65]" />;
       default:
-        return <Clock size={16} className="text-pink-500" />;
+        return <Clock size={16} className="text-[#F2CFD7]" />;
     }
   };
 
@@ -66,10 +66,10 @@ const UpcomingActivities = () => {
                   variant="outline"
                   className={`${
                     activity.type === "meeting"
-                      ? "border-pink-200 bg-pink-50 text-pink-800"
+                      ? "border-[#F2CFD7] bg-[#F2CFD7]/10 text-foreground"
                       : activity.type === "deadline"
                       ? "border-amber-200 bg-amber-50 text-amber-800"
-                      : "border-emerald-200 bg-emerald-50 text-emerald-800"
+                      : "border-[#3D6E65] bg-[#3D6E65]/10 text-foreground"
                   } dark:bg-background dark:text-foreground`}
                 >
                   {activity.type === "meeting"
