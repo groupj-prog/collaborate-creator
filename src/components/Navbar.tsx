@@ -234,14 +234,6 @@ const Navbar = () => {
                   >
                     <Link to="/login">Login</Link>
                   </Button>
-                  <Button
-                    size="sm"
-                    className="rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-200 w-full"
-                    asChild
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <Link to="/register">Get Started</Link>
-                  </Button>
                 </>
               )}
             </div>
