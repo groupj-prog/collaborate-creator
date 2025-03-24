@@ -2,34 +2,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
+import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CreatorSidebar from "@/components/CreatorSidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageSquare, Send, Search, Video, PhoneCall } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-
-type MessageContact = {
-  id: string;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-  time: string;
-  unread: boolean;
-};
-
-type Message = {
-  id: string;
-  content: string;
-  sender: string;
-  timestamp: string;
-  isOwn: boolean;
-};
+import ContactsList from "@/components/messaging/ContactsList";
+import MessageHeader from "@/components/messaging/MessageHeader";
+import MessageContent from "@/components/messaging/MessageContent";
+import MessageInput from "@/components/messaging/MessageInput";
+import EmptyMessageState from "@/components/messaging/EmptyMessageState";
+import { MessageContact, Message } from "@/components/messaging/types";
 
 const CreatorMessages = () => {
   const { user } = useAuth();
@@ -198,203 +182,42 @@ const CreatorMessages = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Contacts List */}
-              <Card className="md:col-span-1 overflow-hidden">
-                <CardHeader className="px-4 py-3">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search messages..."
-                      className="pl-9"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent className="p-0 max-h-[calc(100vh-280px)] overflow-y-auto">
-                  {contacts.length > 0 ? (
-                    <div className="divide-y">
-                      {contacts
-                        .filter((contact) => 
-                          contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          contact.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
-                        )
-                        .map((contact) => (
-                          <div
-                            key={contact.id}
-                            className={`p-4 cursor-pointer hover:bg-muted/30 transition-colors ${
-                              selectedContact?.id === contact.id ? 'bg-muted/60' : ''
-                            }`}
-                            onClick={() => selectContact(contact)}
-                          >
-                            <div className="flex items-start gap-3">
-                              <Avatar>
-                                <AvatarImage src={contact.avatar} alt={contact.name} />
-                                <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-center">
-                                  <h4 className="font-medium truncate">{contact.name}</h4>
-                                  <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                    {contact.time}
-                                  </span>
-                                </div>
-                                <p className="text-sm text-muted-foreground truncate">
-                                  {contact.lastMessage}
-                                </p>
-                              </div>
-                              {contact.unread && (
-                                <div className="w-2 h-2 rounded-full bg-pink-500" />
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-12">
-                      <div className="w-12 h-12 rounded-full bg-muted/50 mx-auto mb-4 flex items-center justify-center">
-                        <MessageSquare className="text-muted-foreground" size={20} />
-                      </div>
-                      <h3 className="text-lg font-medium mb-1">No messages yet</h3>
-                      <p className="text-sm text-muted-foreground">
-                        When clients contact you, their messages will appear here.
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <ContactsList 
+                contacts={contacts}
+                selectedContact={selectedContact}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectContact={selectContact}
+              />
 
               {/* Message Thread */}
               <Card className="md:col-span-2 flex flex-col h-[calc(100vh-240px)]">
                 {selectedContact ? (
                   <>
-                    <CardHeader className="px-6 py-4 border-b flex-shrink-0">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={selectedContact.avatar} alt={selectedContact.name} />
-                            <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <CardTitle className="text-lg">{selectedContact.name}</CardTitle>
-                            <p className="text-xs text-muted-foreground">Client</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {isInCall ? (
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={endCall}
-                            >
-                              End Call
-                            </Button>
-                          ) : (
-                            <>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={acceptCall}
-                                className="h-9 w-9"
-                              >
-                                <PhoneCall size={18} />
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={acceptCall}
-                                className="h-9 w-9"
-                              >
-                                <Video size={18} />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={requestPayment}
-                              >
-                                Request Payment
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
+                    <MessageHeader 
+                      selectedContact={selectedContact}
+                      isInCall={isInCall}
+                      acceptCall={acceptCall}
+                      endCall={endCall}
+                      requestPayment={requestPayment}
+                    />
 
-                    <CardContent className="p-6 flex-grow overflow-y-auto space-y-4">
-                      {isInCall ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center">
-                          <div className="w-24 h-24 mb-4 bg-muted/40 rounded-full flex items-center justify-center">
-                            <Video className="text-muted-foreground" size={36} />
-                          </div>
-                          <h3 className="text-xl font-medium mb-2">In Call with {selectedContact.name}</h3>
-                          <p className="text-muted-foreground mb-6">
-                            Your call is active. Click "End Call" when you're finished.
-                          </p>
-                        </div>
-                      ) : (
-                        messages.map((message) => (
-                          <div
-                            key={message.id}
-                            className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-[75%] rounded-lg p-3 ${
-                                message.isOwn
-                                  ? 'bg-pink-500 text-white ml-auto'
-                                  : 'bg-muted'
-                              }`}
-                            >
-                              <p className="text-sm">{message.content}</p>
-                              <span
-                                className={`text-xs block text-right mt-1 ${
-                                  message.isOwn ? 'text-pink-100' : 'text-muted-foreground'
-                                }`}
-                              >
-                                {new Date(message.timestamp).toLocaleTimeString([], {
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </CardContent>
+                    <MessageContent 
+                      messages={messages}
+                      isInCall={isInCall}
+                      selectedContact={selectedContact}
+                    />
 
                     {!isInCall && (
-                      <div className="p-4 border-t flex items-end gap-2 mt-auto">
-                        <Textarea
-                          placeholder="Type your message..."
-                          className="min-h-[80px] resize-none"
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSendMessage();
-                            }
-                          }}
-                        />
-                        <Button
-                          className="bg-pink-500 hover:bg-pink-600 h-10 w-10 p-0 flex-shrink-0"
-                          onClick={handleSendMessage}
-                        >
-                          <Send size={18} />
-                        </Button>
-                      </div>
+                      <MessageInput 
+                        newMessage={newMessage}
+                        setNewMessage={setNewMessage}
+                        handleSendMessage={handleSendMessage}
+                      />
                     )}
                   </>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-center">
-                    <div className="max-w-xs">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-muted/40 rounded-full flex items-center justify-center">
-                        <MessageSquare className="text-muted-foreground" size={28} />
-                      </div>
-                      <h3 className="text-xl font-medium mb-2">Your Messages</h3>
-                      <p className="text-muted-foreground mb-6">
-                        Select a conversation from the list to view messages and respond to clients.
-                      </p>
-                    </div>
-                  </div>
+                  <EmptyMessageState />
                 )}
               </Card>
             </div>
