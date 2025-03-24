@@ -19,11 +19,11 @@ const HeroSection: React.FC = () => {
                 Connect with top digital talent
               </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-neutral-800">
               Where Great Ideas Meet 
               <span className="text-gradient"> Creative Talent</span>
             </h1>
-            <p className="text-lg text-neutral-600 mb-8 max-w-xl">
+            <p className="text-lg text-neutral-800 mb-8 max-w-xl">
               The seamless platform connecting businesses with top digital creators for exceptional projects. Communicate, collaborate, and create without limits.
             </p>
             
@@ -46,7 +46,7 @@ const HeroSection: React.FC = () => {
                   <div className="w-10 h-10 rounded-full bg-neutral-200 border-2 border-white flex items-center justify-center text-xs font-medium">MR</div>
                   <div className="w-10 h-10 rounded-full bg-pink-200 border-2 border-white flex items-center justify-center text-xs font-medium">SL</div>
                 </div>
-                <p className="text-sm text-neutral-600">
+                <p className="text-sm text-neutral-800">
                   <span className="font-medium">2,500+</span> professionals already joined
                 </p>
               </div>

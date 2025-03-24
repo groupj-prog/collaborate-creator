@@ -19,11 +19,11 @@ const CtaSection: React.FC = () => {
             </span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-semibold mb-6 fade-in-hidden animate-fade-in animation-delay-100">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6 fade-in-hidden animate-fade-in animation-delay-100 text-neutral-800">
             Join the Community of Digital Creators and Clients
           </h2>
           
-          <p className="text-neutral-600 mb-8 max-w-2xl mx-auto fade-in-hidden animate-fade-in animation-delay-200">
+          <p className="text-neutral-800 mb-8 max-w-2xl mx-auto fade-in-hidden animate-fade-in animation-delay-200">
             Whether you're looking to hire talent or showcase your skills, ConnectHub makes the process seamless, secure, and successful.
           </p>
           
