@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Settings, Mail, Phone, MapPin, Edit, Save } from "lucide-react";
+import { User, Settings, Edit, Save } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface ProfileData {
@@ -19,7 +19,6 @@ interface ProfileData {
   username: string;
   email: string;
   bio: string | null;
-  phone: string | null;
   location: string | null;
   avatar_url: string | null;
 }
@@ -34,7 +33,6 @@ const ProfilePage = () => {
     username: "",
     email: "",
     bio: null,
-    phone: null,
     location: null,
     avatar_url: null,
   });
@@ -66,7 +64,6 @@ const ProfilePage = () => {
           username: profileData?.username || "",
           email: userData.user?.email || "",
           bio: profileData?.bio || "",
-          phone: profileData?.phone || "",
           location: profileData?.location || "",
           avatar_url: profileData?.avatar_url || "",
         });
@@ -101,7 +98,6 @@ const ProfilePage = () => {
           full_name: profileData.full_name,
           username: profileData.username,
           bio: profileData.bio,
-          phone: profileData.phone,
           location: profileData.location,
         })
         .eq("id", user?.id);
@@ -179,18 +175,12 @@ const ProfilePage = () => {
                     
                     <div className="w-full space-y-3 mt-6">
                       <div className="flex items-center">
-                        <Mail className="text-muted-foreground mr-3" size={18} />
+                        <User className="text-muted-foreground mr-3" size={18} />
                         <span>{profileData.email}</span>
                       </div>
-                      {profileData.phone && (
-                        <div className="flex items-center">
-                          <Phone className="text-muted-foreground mr-3" size={18} />
-                          <span>{profileData.phone}</span>
-                        </div>
-                      )}
                       {profileData.location && (
                         <div className="flex items-center">
-                          <MapPin className="text-muted-foreground mr-3" size={18} />
+                          <Settings className="text-muted-foreground mr-3" size={18} />
                           <span>{profileData.location}</span>
                         </div>
                       )}
@@ -256,32 +246,17 @@ const ProfilePage = () => {
                       />
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="phone" className="text-sm font-medium mb-1 block">
-                          Phone
-                        </label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          value={profileData.phone || ""}
-                          onChange={handleInputChange}
-                          disabled={!editing}
-                        />
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="location" className="text-sm font-medium mb-1 block">
-                          Location
-                        </label>
-                        <Input
-                          id="location"
-                          name="location"
-                          value={profileData.location || ""}
-                          onChange={handleInputChange}
-                          disabled={!editing}
-                        />
-                      </div>
+                    <div>
+                      <label htmlFor="location" className="text-sm font-medium mb-1 block">
+                        Location
+                      </label>
+                      <Input
+                        id="location"
+                        name="location"
+                        value={profileData.location || ""}
+                        onChange={handleInputChange}
+                        disabled={!editing}
+                      />
                     </div>
                   </CardContent>
                 </Card>
