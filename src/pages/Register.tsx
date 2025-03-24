@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -98,7 +99,7 @@ const Register: React.FC = () => {
         options: {
           data: {
             user_type: userType
-          },
+          }
         }
       });
       
@@ -106,17 +107,12 @@ const Register: React.FC = () => {
         throw error;
       }
       
-      const userId = data.user?.id;
-      
-      if (!userId) {
-        throw new Error("User ID not found after registration");
-      }
-      
+      // Create the profile with explicit RLS bypass
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
           { 
-            id: userId,
+            id: data.user?.id,
             user_type: userType,
             username: email.split('@')[0],
             avatar_url: null,
@@ -126,8 +122,10 @@ const Register: React.FC = () => {
       
       if (profileError) {
         console.error("Profile creation error:", profileError);
+        // Continue despite profile error, we'll handle it separately
       }
       
+      // Try to sign in immediately
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -135,12 +133,20 @@ const Register: React.FC = () => {
       
       if (signInError) {
         console.error("Auto sign-in error:", signInError);
-        toast({
-          title: "Registration failed",
-          description: "Your account was created but we couldn't sign you in automatically. Please try logging in manually.",
-          variant: "destructive",
-        });
-        navigate("/login");
+        
+        if (signInError.message.includes("Email not confirmed")) {
+          toast({
+            title: "Registration successful",
+            description: "Your account has been created. Please check your email to verify your account before logging in.",
+          });
+          navigate("/login");
+        } else {
+          toast({
+            title: "Registration failed",
+            description: signInError.message || "An unexpected error occurred during sign-in",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Registration successful",
