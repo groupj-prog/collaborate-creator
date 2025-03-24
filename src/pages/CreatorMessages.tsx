@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageSquare, Send, Search } from "lucide-react";
+import { MessageSquare, Send, Search, Video, PhoneCall } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 type MessageContact = {
   id: string;
@@ -33,11 +34,13 @@ type Message = {
 const CreatorMessages = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [contacts, setContacts] = useState<MessageContact[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedContact, setSelectedContact] = useState<MessageContact | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isInCall, setIsInCall] = useState(false);
 
   useEffect(() => {
     // Redirect if not logged in
@@ -62,7 +65,7 @@ const CreatorMessages = () => {
 
     checkUserRole();
     
-    // For demo purposes, we'll add a sample contact
+    // For demo purposes, we'll add sample contacts
     setContacts([
       {
         id: '1',
@@ -71,6 +74,14 @@ const CreatorMessages = () => {
         lastMessage: 'I was impressed by your portfolio...',
         time: '2h ago',
         unread: true
+      },
+      {
+        id: '2',
+        name: 'Sarah Johnson',
+        avatar: '',
+        lastMessage: 'Can we discuss the project budget?',
+        time: '1d ago',
+        unread: false
       }
     ]);
   }, [user, navigate]);
@@ -105,6 +116,7 @@ const CreatorMessages = () => {
 
   const selectContact = (contact: MessageContact) => {
     setSelectedContact(contact);
+    setIsInCall(false);
     
     // For demo purposes, add sample messages
     if (contact.id === '1') {
@@ -117,9 +129,59 @@ const CreatorMessages = () => {
           isOwn: false
         }
       ]);
+    } else if (contact.id === '2') {
+      setMessages([
+        {
+          id: '1',
+          content: "Hi, I need a logo designed for my new startup. What's your rate for logo design?",
+          sender: contact.id,
+          timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+          isOwn: false
+        }
+      ]);
     } else {
       setMessages([]);
     }
+  };
+
+  const acceptCall = () => {
+    if (!selectedContact) return;
+    
+    toast({
+      title: "Call Accepted",
+      description: `You are now in a call with ${selectedContact.name}`,
+    });
+    
+    setIsInCall(true);
+  };
+
+  const endCall = () => {
+    toast({
+      title: "Call Ended",
+      description: "The call has been terminated",
+    });
+    
+    setIsInCall(false);
+  };
+
+  const requestPayment = () => {
+    if (!selectedContact) return;
+    
+    toast({
+      title: "Payment Request Sent",
+      description: `Payment request has been sent to ${selectedContact.name}`,
+    });
+    
+    // Add a message about the payment request
+    const paymentRequestMsg: Message = {
+      id: Date.now().toString(),
+      content: "I've sent you a payment request for our services. Please complete the payment to continue.",
+      sender: 'me',
+      timestamp: new Date().toISOString(),
+      isOwn: true
+    };
+    
+    setMessages(prev => [...prev, paymentRequestMsg]);
   };
 
   return (
@@ -151,36 +213,41 @@ const CreatorMessages = () => {
                 <CardContent className="p-0 max-h-[calc(100vh-280px)] overflow-y-auto">
                   {contacts.length > 0 ? (
                     <div className="divide-y">
-                      {contacts.map((contact) => (
-                        <div
-                          key={contact.id}
-                          className={`p-4 cursor-pointer hover:bg-muted/30 transition-colors ${
-                            selectedContact?.id === contact.id ? 'bg-muted/60' : ''
-                          }`}
-                          onClick={() => selectContact(contact)}
-                        >
-                          <div className="flex items-start gap-3">
-                            <Avatar>
-                              <AvatarImage src={contact.avatar} alt={contact.name} />
-                              <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex justify-between items-center">
-                                <h4 className="font-medium truncate">{contact.name}</h4>
-                                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                  {contact.time}
-                                </span>
+                      {contacts
+                        .filter((contact) => 
+                          contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          contact.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map((contact) => (
+                          <div
+                            key={contact.id}
+                            className={`p-4 cursor-pointer hover:bg-muted/30 transition-colors ${
+                              selectedContact?.id === contact.id ? 'bg-muted/60' : ''
+                            }`}
+                            onClick={() => selectContact(contact)}
+                          >
+                            <div className="flex items-start gap-3">
+                              <Avatar>
+                                <AvatarImage src={contact.avatar} alt={contact.name} />
+                                <AvatarFallback>{contact.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center">
+                                  <h4 className="font-medium truncate">{contact.name}</h4>
+                                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                    {contact.time}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-muted-foreground truncate">
+                                  {contact.lastMessage}
+                                </p>
                               </div>
-                              <p className="text-sm text-muted-foreground truncate">
-                                {contact.lastMessage}
-                              </p>
+                              {contact.unread && (
+                                <div className="w-2 h-2 rounded-full bg-pink-500" />
+                              )}
                             </div>
-                            {contact.unread && (
-                              <div className="w-2 h-2 rounded-full bg-pink-500" />
-                            )}
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   ) : (
                     <div className="text-center py-12">
@@ -201,67 +268,120 @@ const CreatorMessages = () => {
                 {selectedContact ? (
                   <>
                     <CardHeader className="px-6 py-4 border-b flex-shrink-0">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage src={selectedContact.avatar} alt={selectedContact.name} />
-                          <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <CardTitle className="text-lg">{selectedContact.name}</CardTitle>
-                          <p className="text-xs text-muted-foreground">Client</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={selectedContact.avatar} alt={selectedContact.name} />
+                            <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <CardTitle className="text-lg">{selectedContact.name}</CardTitle>
+                            <p className="text-xs text-muted-foreground">Client</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {isInCall ? (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={endCall}
+                            >
+                              End Call
+                            </Button>
+                          ) : (
+                            <>
+                              <Button 
+                                variant="outline" 
+                                size="icon" 
+                                onClick={acceptCall}
+                                className="h-9 w-9"
+                              >
+                                <PhoneCall size={18} />
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="icon" 
+                                onClick={acceptCall}
+                                className="h-9 w-9"
+                              >
+                                <Video size={18} />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={requestPayment}
+                              >
+                                Request Payment
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </CardHeader>
 
                     <CardContent className="p-6 flex-grow overflow-y-auto space-y-4">
-                      {messages.map((message) => (
-                        <div
-                          key={message.id}
-                          className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
-                        >
+                      {isInCall ? (
+                        <div className="flex flex-col items-center justify-center h-full text-center">
+                          <div className="w-24 h-24 mb-4 bg-muted/40 rounded-full flex items-center justify-center">
+                            <Video className="text-muted-foreground" size={36} />
+                          </div>
+                          <h3 className="text-xl font-medium mb-2">In Call with {selectedContact.name}</h3>
+                          <p className="text-muted-foreground mb-6">
+                            Your call is active. Click "End Call" when you're finished.
+                          </p>
+                        </div>
+                      ) : (
+                        messages.map((message) => (
                           <div
-                            className={`max-w-[75%] rounded-lg p-3 ${
-                              message.isOwn
-                                ? 'bg-pink-500 text-white ml-auto'
-                                : 'bg-muted'
-                            }`}
+                            key={message.id}
+                            className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
                           >
-                            <p className="text-sm">{message.content}</p>
-                            <span
-                              className={`text-xs block text-right mt-1 ${
-                                message.isOwn ? 'text-pink-100' : 'text-muted-foreground'
+                            <div
+                              className={`max-w-[75%] rounded-lg p-3 ${
+                                message.isOwn
+                                  ? 'bg-pink-500 text-white ml-auto'
+                                  : 'bg-muted'
                               }`}
                             >
-                              {new Date(message.timestamp).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </span>
+                              <p className="text-sm">{message.content}</p>
+                              <span
+                                className={`text-xs block text-right mt-1 ${
+                                  message.isOwn ? 'text-pink-100' : 'text-muted-foreground'
+                                }`}
+                              >
+                                {new Date(message.timestamp).toLocaleTimeString([], {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </CardContent>
 
-                    <div className="p-4 border-t flex items-end gap-2 mt-auto">
-                      <Textarea
-                        placeholder="Type your message..."
-                        className="min-h-[80px] resize-none"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSendMessage();
-                          }
-                        }}
-                      />
-                      <Button
-                        className="bg-pink-500 hover:bg-pink-600 h-10 w-10 p-0 flex-shrink-0"
-                        onClick={handleSendMessage}
-                      >
-                        <Send size={18} />
-                      </Button>
-                    </div>
+                    {!isInCall && (
+                      <div className="p-4 border-t flex items-end gap-2 mt-auto">
+                        <Textarea
+                          placeholder="Type your message..."
+                          className="min-h-[80px] resize-none"
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              handleSendMessage();
+                            }
+                          }}
+                        />
+                        <Button
+                          className="bg-pink-500 hover:bg-pink-600 h-10 w-10 p-0 flex-shrink-0"
+                          onClick={handleSendMessage}
+                        >
+                          <Send size={18} />
+                        </Button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="flex items-center justify-center h-full text-center">
