@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,37 +44,15 @@ const Login: React.FC = () => {
       });
       
       if (error) {
-        if (error.message.includes("Email not confirmed")) {
-          // Handle email not confirmed error specifically
-          toast({
-            title: "Email not verified",
-            description: "Please check your inbox and verify your email before logging in. If you don't see the email, check your spam folder.",
-            variant: "destructive",
-          });
-          
-          // Offer to resend verification email
-          const { error: resendError } = await supabase.auth.resend({
-            type: 'signup',
-            email: email,
-          });
-          
-          if (!resendError) {
-            toast({
-              title: "Verification email resent",
-              description: "We've sent another verification email to your inbox."
-            });
-          }
-        } else {
-          throw error;
-        }
-      } else {
-        toast({
-          title: "Success",
-          description: "You have been logged in successfully",
-        });
-        
-        navigate("/");
+        throw error;
       }
+      
+      toast({
+        title: "Success",
+        description: "You have been logged in successfully",
+      });
+      
+      navigate("/");
     } catch (error: any) {
       toast({
         title: "Login failed",
