@@ -28,7 +28,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
   onPaymentComplete,
 }) => {
   const { toast } = useToast();
-  const [amount, setAmount] = useState("100");
+  const [amount, setAmount] = useState("100000");
   const [projectName, setProjectName] = useState("Website Design");
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
@@ -49,7 +49,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
       setTimeout(() => {
         toast({
           title: "Payment Successful",
-          description: `You have successfully paid ${recipientName} $${amount} for their services.`,
+          description: `You have successfully paid ${recipientName} ${Number(amount).toLocaleString()} MMK for their services.`,
         });
         onPaymentComplete();
         onClose();
@@ -95,12 +95,12 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="amount">Amount ($)</Label>
+                <Label htmlFor="amount">Amount (MMK)</Label>
                 <Input
                   id="amount"
                   type="number"
-                  min="1"
-                  step="0.01"
+                  min="1000"
+                  step="1000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Enter amount"
@@ -110,18 +110,18 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
               <div className="rounded-md bg-muted/50 p-3 text-sm">
                 <div className="flex justify-between mb-1">
                   <span>Subtotal:</span>
-                  <span>${amount}</span>
+                  <span>{Number(amount).toLocaleString()} MMK</span>
                 </div>
                 <div className="flex justify-between mb-1 text-muted-foreground">
                   <span className="flex items-center gap-1">
                     Platform fee (5%)
                     <Info className="h-3 w-3" />
                   </span>
-                  <span>-${platformFee.toFixed(2)}</span>
+                  <span>-{platformFee.toLocaleString()} MMK</span>
                 </div>
                 <div className="flex justify-between font-medium pt-2 border-t">
                   <span>Creator receives:</span>
-                  <span>${creatorAmount.toFixed(2)}</span>
+                  <span>{creatorAmount.toLocaleString()} MMK</span>
                 </div>
               </div>
 
@@ -151,7 +151,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
             </div>
             <h2 className="text-xl font-semibold mb-2">Payment Successful!</h2>
             <p className="text-muted-foreground mb-4">
-              Your payment of ${amount} to {recipientName} has been processed successfully.
+              Your payment of {Number(amount).toLocaleString()} MMK to {recipientName} has been processed successfully.
             </p>
             <p className="text-sm text-muted-foreground">
               You'll be redirected back in a moment...

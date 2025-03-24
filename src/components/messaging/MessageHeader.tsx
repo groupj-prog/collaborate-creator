@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PhoneCall, Video } from "lucide-react";
+import { PhoneCall, Video, DollarSign } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,7 +57,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
                 variant="outline" 
                 size="icon" 
                 onClick={acceptCall}
-                className="h-9 w-9"
+                className="h-9 w-9 text-neutral-700 dark:text-neutral-200"
               >
                 <PhoneCall size={18} />
               </Button>
@@ -65,7 +65,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
                 variant="outline" 
                 size="icon" 
                 onClick={acceptCall}
-                className="h-9 w-9"
+                className="h-9 w-9 text-neutral-700 dark:text-neutral-200"
               >
                 <Video size={18} />
               </Button>
@@ -73,7 +73,9 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={requestPayment}
+                className="text-neutral-700 dark:text-neutral-200"
               >
+                <DollarSign size={16} className="mr-1" />
                 Request Payment
               </Button>
             </>

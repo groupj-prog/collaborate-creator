@@ -33,10 +33,8 @@ const CreateJob = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   
-  // Categories
   const categories = ["Web Development", "Mobile App", "Design", "Marketing", "Writing", "Other"];
   
-  // Initialize form
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
@@ -48,7 +46,6 @@ const CreateJob = () => {
     },
   });
   
-  // Redirect if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
       toast({
@@ -60,7 +57,6 @@ const CreateJob = () => {
     }
   }, [authLoading, user, navigate]);
   
-  // Ensure we're passing the new fields to the database
   const onSubmit = async (values: JobFormValues) => {
     if (!user) {
       toast({
@@ -181,11 +177,12 @@ const CreateJob = () => {
                     name="budget"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Budget (USD)</FormLabel>
+                        <FormLabel>Budget (MMK)</FormLabel>
                         <FormControl>
                           <Input 
                             type="number" 
-                            min="1"
+                            min="1000"
+                            step="1000"
                             placeholder="Enter your budget" 
                             {...field} 
                           />

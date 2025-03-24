@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 
-// Extend the Jobs type to include the new fields we added in SQL
 type Job = Tables<"jobs"> & {
   category?: string | null;
   deadline?: string | null;
@@ -33,7 +31,6 @@ const Jobs = () => {
   const [budgetFilter, setBudgetFilter] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Categories for filtering
   const categories = ["Web Development", "Mobile App", "Design", "Marketing", "Writing", "Other"];
 
   useEffect(() => {
@@ -44,25 +41,19 @@ const Jobs = () => {
     try {
       setLoading(true);
       
-      // Start with a basic query and build up parts separately to avoid deep type instantiation
       const baseQuery = supabase.from("jobs");
       
-      // Create query parameters object
       const queryParams: Record<string, any> = {};
       
-      // Add filters to params if they exist
       if (selectedCategory) {
         queryParams.category = selectedCategory;
       }
       
-      // Execute the query
       let { data, error } = await baseQuery
         .select()
-        .match(queryParams) // Use match for exact equality conditions
+        .match(queryParams)
         .order('created_at', { ascending: false });
       
-      // Handle budget filtering separately after initial query
-      // to avoid complex query chains that cause TypeScript issues
       if (data && budgetFilter) {
         switch(budgetFilter) {
           case "under100":
@@ -84,7 +75,6 @@ const Jobs = () => {
         throw error;
       }
       
-      // Cast the data to our extended Job type
       setJobs(data as Job[] || []);
     } catch (error: any) {
       toast({
@@ -104,7 +94,7 @@ const Jobs = () => {
 
   const formatBudget = (budget: number | null) => {
     if (budget === null) return "Budget not specified";
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(budget);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'MMK', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(budget);
   };
 
   const formatDate = (dateString: string | null) => {
@@ -134,7 +124,6 @@ const Jobs = () => {
           )}
         </div>
         
-        {/* Search and filter */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="relative flex-1">
@@ -237,7 +226,6 @@ const Jobs = () => {
           )}
         </div>
         
-        {/* Jobs list */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (

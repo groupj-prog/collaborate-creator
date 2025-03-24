@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +10,6 @@ import Footer from "@/components/Footer";
 import { Calendar, DollarSign, Tag, User, Clock } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 
-// Extend the Jobs type to include the new fields we added in SQL
 type Job = Tables<"jobs"> & {
   category?: string | null;
   deadline?: string | null;
@@ -44,7 +42,6 @@ const JobDetail = () => {
     try {
       setLoading(true);
       
-      // Fetch job details
       const { data: jobData, error: jobError } = await supabase
         .from("jobs")
         .select("*")
@@ -67,7 +64,6 @@ const JobDetail = () => {
       
       setJob(jobData as Job);
       
-      // If there's a client_id, fetch client details
       if (jobData.client_id) {
         const { data: clientData, error: clientError } = await supabase
           .from("profiles")
@@ -92,7 +88,7 @@ const JobDetail = () => {
 
   const formatBudget = (budget: number | null) => {
     if (budget === null) return "Budget not specified";
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(budget);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'MMK', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(budget);
   };
 
   const formatDate = (dateString: string | null) => {
