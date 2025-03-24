@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogOut, Moon, Sun } from "lucide-react";
@@ -58,8 +59,8 @@ const Navbar = () => {
       <div className="container mx-auto px-6 flex items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-semibold">Connect</span>
-            <span className="text-2xl font-semibold text-pink-500">Hub</span>
+            <span className="text-2xl font-semibold">Talent</span>
+            <span className="text-2xl font-semibold text-pink-500">Bazaar</span>
           </Link>
         </div>
 
