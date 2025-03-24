@@ -26,6 +26,7 @@ import ClientSearch from "./pages/ClientSearch";
 import ClientMessages from "./pages/ClientMessages";
 import ClientAbout from "./pages/ClientAbout";
 import CreatorProfileView from "./pages/CreatorProfileView";
+import LiveChat from "./pages/LiveChat";
 
 // Create a client instance outside the component
 const queryClient = new QueryClient();
@@ -64,6 +65,9 @@ function App() {
                 <Route path="/client-messages" element={<ClientMessages />} />
                 <Route path="/client-about" element={<ClientAbout />} />
                 <Route path="/creator-profile/:id" element={<CreatorProfileView />} />
+                
+                {/* Live Chat route */}
+                <Route path="/live-chat" element={<LiveChat />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
