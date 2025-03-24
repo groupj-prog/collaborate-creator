@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -122,6 +123,7 @@ const Register: React.FC = () => {
         console.error("Profile creation error:", profileError);
       }
       
+      // Try to sign in immediately after signup
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password
