@@ -12,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import CarrierPhotoSection from "@/components/CarrierPhotoSection";
+import ChatButton from "@/components/ChatButton";
 
 const Index: React.FC = () => {
   const { theme } = useTheme();
@@ -78,6 +79,7 @@ const Index: React.FC = () => {
         )}
       </main>
       <Footer />
+      <ChatButton />
     </div>
   );
 };
