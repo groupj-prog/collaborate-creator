@@ -44,11 +44,10 @@ const Jobs = () => {
     try {
       setLoading(true);
       
-      // Type the query explicitly to avoid infinite type instantiation
-      let query = supabase
-        .from("jobs")
-        .select("*");
+      // Use a simple approach to avoid TypeScript complexity
+      let query = supabase.from("jobs").select();
       
+      // Apply filters if they exist
       if (selectedCategory) {
         query = query.eq("category", selectedCategory);
       }
@@ -79,6 +78,7 @@ const Jobs = () => {
         throw error;
       }
       
+      // Cast the data to our extended Job type
       setJobs(data as Job[] || []);
     } catch (error: any) {
       toast({
