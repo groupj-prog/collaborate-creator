@@ -53,7 +53,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "glass py-3" : "bg-transparent py-5"
+        isScrolled ? "glass py-3 bg-pink-50/90" : "bg-pink-50/70 py-5"
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
