@@ -44,35 +44,41 @@ const Jobs = () => {
     try {
       setLoading(true);
       
-      // Use a simple approach to avoid TypeScript complexity
-      let query = supabase.from("jobs").select();
+      // Start with a basic query and build up parts separately to avoid deep type instantiation
+      const baseQuery = supabase.from("jobs");
       
-      // Apply filters if they exist
+      // Create query parameters object
+      const queryParams: Record<string, any> = {};
+      
+      // Add filters to params if they exist
       if (selectedCategory) {
-        query = query.eq("category", selectedCategory);
+        queryParams.category = selectedCategory;
       }
       
-      if (budgetFilter) {
+      // Execute the query
+      let { data, error } = await baseQuery
+        .select()
+        .match(queryParams) // Use match for exact equality conditions
+        .order('created_at', { ascending: false });
+      
+      // Handle budget filtering separately after initial query
+      // to avoid complex query chains that cause TypeScript issues
+      if (data && budgetFilter) {
         switch(budgetFilter) {
           case "under100":
-            query = query.lt("budget", 100);
+            data = data.filter(job => job.budget !== null && job.budget < 100);
             break;
           case "100to500":
-            query = query.gte("budget", 100).lt("budget", 500);
+            data = data.filter(job => job.budget !== null && job.budget >= 100 && job.budget < 500);
             break;
           case "500to1000":
-            query = query.gte("budget", 500).lt("budget", 1000);
+            data = data.filter(job => job.budget !== null && job.budget >= 500 && job.budget < 1000);
             break;
           case "over1000":
-            query = query.gte("budget", 1000);
+            data = data.filter(job => job.budget !== null && job.budget >= 1000);
             break;
         }
       }
-      
-      // Add ordering after all filters
-      query = query.order("created_at", { ascending: false });
-      
-      const { data, error } = await query;
       
       if (error) {
         throw error;
