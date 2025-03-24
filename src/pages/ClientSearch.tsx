@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -27,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Filter, Star, ChevronDown } from "lucide-react";
+import { Search, Filter, Star, ChevronDown, ExternalLink } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -148,6 +147,10 @@ const ClientSearch = () => {
     // Filter by minimum rating
     creator.rating >= ratingFilter[0]
   );
+
+  const handleViewProfile = (creatorId: string) => {
+    navigate(`/creator-profile/${creatorId}`);
+  };
 
   const handleContactCreator = (creatorId: string) => {
     // Will implement actual messaging functionality later
@@ -302,7 +305,9 @@ const ClientSearch = () => {
                                     />
                                   )}
                                 </div>
-                                <span>{creator.name}</span>
+                                <span className="cursor-pointer hover:text-pink-500" onClick={() => handleViewProfile(creator.id)}>
+                                  {creator.name}
+                                </span>
                               </div>
                             </TableCell>
                             <TableCell>
@@ -325,13 +330,24 @@ const ClientSearch = () => {
                             </TableCell>
                             <TableCell>{creator.projects}</TableCell>
                             <TableCell>
-                              <Button 
-                                variant="outline" 
-                                className="bg-pink-500 hover:bg-pink-600 text-white"
-                                onClick={() => handleContactCreator(creator.id)}
-                              >
-                                Contact
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => handleViewProfile(creator.id)}
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  Profile
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="bg-pink-500 hover:bg-pink-600 text-white"
+                                  onClick={() => handleContactCreator(creator.id)}
+                                >
+                                  Contact
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
