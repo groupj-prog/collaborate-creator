@@ -2,8 +2,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const HeroSection: React.FC = () => {
+  const { user } = useAuth();
+  
   return (
     <section className="pt-32 pb-20 px-6 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-pink-50 to-transparent opacity-70"></div>
@@ -24,26 +27,30 @@ const HeroSection: React.FC = () => {
               The seamless platform connecting businesses with top digital creators for exceptional projects. Communicate, collaborate, and create without limits.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Button className="primary-button bg-pink-500 hover:bg-pink-600" asChild>
-                <Link to="/register">Get Started</Link>
-              </Button>
-              <Button className="outline-button" variant="outline" asChild>
-                <Link to="/how-it-works">Learn More</Link>
-              </Button>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-4">
-                <div className="w-10 h-10 rounded-full bg-neutral-200 border-2 border-white flex items-center justify-center text-xs font-medium">JD</div>
-                <div className="w-10 h-10 rounded-full bg-pink-200 border-2 border-white flex items-center justify-center text-xs font-medium">KP</div>
-                <div className="w-10 h-10 rounded-full bg-neutral-200 border-2 border-white flex items-center justify-center text-xs font-medium">MR</div>
-                <div className="w-10 h-10 rounded-full bg-pink-200 border-2 border-white flex items-center justify-center text-xs font-medium">SL</div>
+            {!user && (
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <Button className="primary-button bg-pink-500 hover:bg-pink-600" asChild>
+                  <Link to="/register">Get Started</Link>
+                </Button>
+                <Button className="outline-button" variant="outline" asChild>
+                  <Link to="/how-it-works">Learn More</Link>
+                </Button>
               </div>
-              <p className="text-sm text-neutral-600">
-                <span className="font-medium">2,500+</span> professionals already joined
-              </p>
-            </div>
+            )}
+            
+            {!user && (
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-4">
+                  <div className="w-10 h-10 rounded-full bg-neutral-200 border-2 border-white flex items-center justify-center text-xs font-medium">JD</div>
+                  <div className="w-10 h-10 rounded-full bg-pink-200 border-2 border-white flex items-center justify-center text-xs font-medium">KP</div>
+                  <div className="w-10 h-10 rounded-full bg-neutral-200 border-2 border-white flex items-center justify-center text-xs font-medium">MR</div>
+                  <div className="w-10 h-10 rounded-full bg-pink-200 border-2 border-white flex items-center justify-center text-xs font-medium">SL</div>
+                </div>
+                <p className="text-sm text-neutral-600">
+                  <span className="font-medium">2,500+</span> professionals already joined
+                </p>
+              </div>
+            )}
           </div>
           
           <div className="lg:w-1/2 mt-12 lg:mt-0 fade-in-hidden animate-fade-in animation-delay-300">
