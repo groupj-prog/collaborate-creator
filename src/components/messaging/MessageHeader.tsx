@@ -38,8 +38,8 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
             <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle className="text-lg">{selectedContact.name}</CardTitle>
-            <p className="text-xs text-muted-foreground">Client</p>
+            <CardTitle className="text-lg text-neutral-800 dark:text-white">{selectedContact.name}</CardTitle>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">Client</p>
           </div>
         </div>
         <div className="flex items-center gap-2">

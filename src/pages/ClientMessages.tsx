@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -13,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageSquare, Send, Search, Video, PhoneCall, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import PaymentDialog from "@/components/messaging/PaymentDialog";
 
 type MessageContact = {
   id: string;
@@ -44,15 +44,14 @@ const ClientMessages = () => {
   const [sessionEnded, setSessionEnded] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
 
   useEffect(() => {
-    // Redirect if not logged in
     if (!user) {
       navigate("/login");
       return;
     }
 
-    // Check if user is a client
     const checkUserRole = async () => {
       const { data } = await supabase
         .from('profiles')
@@ -61,14 +60,12 @@ const ClientMessages = () => {
         .single();
       
       if (data?.user_type === 'creator') {
-        // Redirect creators
         navigate("/creator-dashboard");
       }
     };
 
     checkUserRole();
     
-    // For demo purposes, we'll add sample contacts
     setContacts([
       {
         id: '1',
@@ -103,7 +100,6 @@ const ClientMessages = () => {
     setMessages([...messages, newMessageObj]);
     setNewMessage("");
     
-    // Simulate reply after 1 second
     setTimeout(() => {
       const replyMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -122,25 +118,23 @@ const ClientMessages = () => {
     setSessionEnded(false);
     setIsInCall(false);
     
-    // Reset review data
     setRating(0);
     setReview("");
     
-    // For demo purposes, add sample messages
     if (contact.id === '1') {
       setMessages([
         {
           id: '1',
           content: "Hello! I'm interested in your web design services. Can you tell me more about your rates?",
           sender: 'me',
-          timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
           isOwn: true
         },
         {
           id: '2',
           content: "Hi there! My rates start at $50/hour for basic web design, and I offer package deals for complete projects. What kind of website are you looking to build?",
           sender: contact.id,
-          timestamp: new Date(Date.now() - 3540000).toISOString(), // 59 minutes ago
+          timestamp: new Date(Date.now() - 3540000).toISOString(),
           isOwn: false
         }
       ]);
@@ -150,14 +144,14 @@ const ClientMessages = () => {
           id: '1',
           content: "I need a new logo for my business. Can you help?",
           sender: 'me',
-          timestamp: new Date(Date.now() - 10800000).toISOString(), // 3 hours ago
+          timestamp: new Date(Date.now() - 10800000).toISOString(),
           isOwn: true
         },
         {
           id: '2',
           content: "Absolutely! I specialize in logo design. What's your business about and do you have any color preferences?",
           sender: contact.id,
-          timestamp: new Date(Date.now() - 10740000).toISOString(), // 2 hours 59 minutes ago
+          timestamp: new Date(Date.now() - 10740000).toISOString(),
           isOwn: false
         }
       ]);
@@ -174,7 +168,6 @@ const ClientMessages = () => {
       description: `Connecting with ${selectedContact.name}...`,
     });
     
-    // Simulate call connection
     setTimeout(() => {
       setIsInCall(true);
       toast({
@@ -206,29 +199,40 @@ const ClientMessages = () => {
       description: "Thank you for your feedback!",
     });
     
-    // Here we would normally send the review to the database
     console.log(`Review for ${selectedContact.name}: ${rating} stars - "${review}"`);
     
-    // Reset the review form
     setSessionEnded(false);
   };
 
   const processPayment = () => {
     if (!selectedContact) return;
+    setIsPaymentDialogOpen(true);
+  };
+
+  const handlePaymentComplete = () => {
+    if (!selectedContact) return;
     
-    toast({
-      title: "Processing Payment",
-      description: "Please complete payment in the opened window",
-    });
+    const paymentMessage: Message = {
+      id: Date.now().toString(),
+      content: "I've completed the payment for your services. Thank you!",
+      sender: 'me',
+      timestamp: new Date().toISOString(),
+      isOwn: true
+    };
     
-    // Normally we would redirect to a payment gateway or open a modal
-    // For demo purposes, we'll simulate a successful payment
+    setMessages(prev => [...prev, paymentMessage]);
+    
     setTimeout(() => {
-      toast({
-        title: "Payment Successful",
-        description: `You have paid ${selectedContact.name} for their services`,
-      });
-    }, 2000);
+      const replyMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Thank you for your payment! I'll continue working on your project right away.",
+        sender: selectedContact.id,
+        timestamp: new Date().toISOString(),
+        isOwn: false
+      };
+      
+      setMessages(prev => [...prev, replyMessage]);
+    }, 1000);
   };
 
   return (
@@ -238,13 +242,12 @@ const ClientMessages = () => {
         <ClientSidebar />
         <main className="flex-1 ml-64 pt-24 pb-16 px-8">
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold mb-2">Messages</h1>
-            <p className="text-muted-foreground mb-8">
+            <h1 className="text-3xl font-bold mb-2 text-neutral-800 dark:text-white">Messages</h1>
+            <p className="text-neutral-700 dark:text-neutral-300 mb-8">
               Communicate with creators about your projects
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Contacts List */}
               <Card className="md:col-span-1 overflow-hidden">
                 <CardHeader className="px-4 py-3">
                   <div className="relative">
@@ -280,12 +283,12 @@ const ClientMessages = () => {
                               </Avatar>
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center">
-                                  <h4 className="font-medium truncate">{contact.name}</h4>
-                                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                  <h4 className="font-medium truncate text-neutral-800 dark:text-white">{contact.name}</h4>
+                                  <span className="text-xs text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
                                     {contact.time}
                                   </span>
                                 </div>
-                                <p className="text-sm text-muted-foreground truncate">
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
                                   {contact.lastMessage}
                                 </p>
                               </div>
@@ -301,8 +304,8 @@ const ClientMessages = () => {
                       <div className="w-12 h-12 rounded-full bg-muted/50 mx-auto mb-4 flex items-center justify-center">
                         <MessageSquare className="text-muted-foreground" size={20} />
                       </div>
-                      <h3 className="text-lg font-medium mb-1">No messages yet</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <h3 className="text-lg font-medium mb-1 text-neutral-800 dark:text-white">No messages yet</h3>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
                         When you contact creators, your conversations will appear here.
                       </p>
                     </div>
@@ -310,7 +313,6 @@ const ClientMessages = () => {
                 </CardContent>
               </Card>
 
-              {/* Message Thread */}
               <Card className="md:col-span-2 flex flex-col h-[calc(100vh-240px)]">
                 {selectedContact ? (
                   <>
@@ -322,8 +324,8 @@ const ClientMessages = () => {
                             <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <CardTitle className="text-lg">{selectedContact.name}</CardTitle>
-                            <p className="text-xs text-muted-foreground">Creator</p>
+                            <CardTitle className="text-lg text-neutral-800 dark:text-white">{selectedContact.name}</CardTitle>
+                            <p className="text-xs text-neutral-600 dark:text-neutral-400">Creator</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -372,21 +374,21 @@ const ClientMessages = () => {
                           <div className="w-24 h-24 mb-4 bg-muted/40 rounded-full flex items-center justify-center">
                             <Video className="text-muted-foreground" size={36} />
                           </div>
-                          <h3 className="text-xl font-medium mb-2">In Call with {selectedContact.name}</h3>
-                          <p className="text-muted-foreground mb-6">
+                          <h3 className="text-xl font-medium mb-2 text-neutral-800 dark:text-white">In Call with {selectedContact.name}</h3>
+                          <p className="text-neutral-700 dark:text-neutral-300 mb-6">
                             Your call is active. Click "End Call" when you're finished.
                           </p>
                         </div>
                       ) : sessionEnded ? (
                         <div className="flex flex-col items-center justify-center h-full text-center max-w-md mx-auto">
-                          <h3 className="text-xl font-medium mb-4">Rate Your Session</h3>
+                          <h3 className="text-xl font-medium mb-4 text-neutral-800 dark:text-white">Rate Your Session</h3>
                           <div className="flex items-center justify-center gap-2 mb-4">
                             {[1, 2, 3, 4, 5].map((value) => (
                               <button
                                 key={value}
                                 type="button"
                                 className={`text-2xl focus:outline-none ${
-                                  value <= rating ? 'text-yellow-500' : 'text-gray-300'
+                                  value <= rating ? 'text-yellow-500' : 'text-neutral-300 dark:text-neutral-600'
                                 }`}
                                 onClick={() => handleRating(value)}
                               >
@@ -424,7 +426,7 @@ const ClientMessages = () => {
                               <p className="text-sm">{message.content}</p>
                               <span
                                 className={`text-xs block text-right mt-1 ${
-                                  message.isOwn ? 'text-pink-100' : 'text-muted-foreground'
+                                  message.isOwn ? 'text-pink-100' : 'text-neutral-500 dark:text-neutral-400'
                                 }`}
                               >
                                 {new Date(message.timestamp).toLocaleTimeString([], {
@@ -467,8 +469,8 @@ const ClientMessages = () => {
                       <div className="w-16 h-16 mx-auto mb-4 bg-muted/40 rounded-full flex items-center justify-center">
                         <MessageSquare className="text-muted-foreground" size={28} />
                       </div>
-                      <h3 className="text-xl font-medium mb-2">Your Messages</h3>
-                      <p className="text-muted-foreground mb-6">
+                      <h3 className="text-xl font-medium mb-2 text-neutral-800 dark:text-white">Your Messages</h3>
+                      <p className="text-neutral-700 dark:text-neutral-300 mb-6">
                         Select a conversation from the list to view messages and respond to creators.
                       </p>
                     </div>
@@ -480,6 +482,15 @@ const ClientMessages = () => {
         </main>
       </div>
       <Footer />
+      
+      {selectedContact && (
+        <PaymentDialog
+          isOpen={isPaymentDialogOpen}
+          onClose={() => setIsPaymentDialogOpen(false)}
+          recipientName={selectedContact.name}
+          onPaymentComplete={handlePaymentComplete}
+        />
+      )}
     </div>
   );
 };
