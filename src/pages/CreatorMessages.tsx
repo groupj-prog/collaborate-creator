@@ -159,13 +159,28 @@ const CreatorMessages = () => {
     // Add a message about the payment request
     const paymentRequestMsg: Message = {
       id: Date.now().toString(),
-      content: "I've sent you a payment request for our services. Please complete the payment to continue.",
+      content: "I've sent you a payment request for our services. Please click here to complete the payment: [Payment Link]",
       sender: 'me',
       timestamp: new Date().toISOString(),
       isOwn: true
     };
     
     setMessages(prev => [...prev, paymentRequestMsg]);
+    
+    // Simulate client seeing the payment request
+    setTimeout(() => {
+      // In a real app, this would be handled via a notification or websocket
+      // Here we just simulate a response for demo purposes
+      const clientResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I've received your payment request. I'll process it shortly.",
+        sender: selectedContact.id,
+        timestamp: new Date(Date.now() + 60000).toISOString(), // 1 minute later
+        isOwn: false
+      };
+      
+      setMessages(prev => [...prev, clientResponse]);
+    }, 2000);
   };
 
   return (
@@ -200,6 +215,7 @@ const CreatorMessages = () => {
                       acceptCall={acceptCall}
                       endCall={endCall}
                       requestPayment={requestPayment}
+                      userType="creator"
                     />
 
                     <MessageContent 

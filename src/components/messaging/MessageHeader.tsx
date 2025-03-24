@@ -20,6 +20,7 @@ interface MessageHeaderProps {
   acceptCall: () => void;
   endCall: () => void;
   requestPayment: () => void;
+  userType?: 'creator' | 'client';
 }
 
 const MessageHeader: React.FC<MessageHeaderProps> = ({
@@ -28,6 +29,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
   acceptCall,
   endCall,
   requestPayment,
+  userType = 'creator',
 }) => {
   return (
     <CardHeader className="px-6 py-4 border-b flex-shrink-0">
@@ -39,7 +41,7 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
           </Avatar>
           <div>
             <CardTitle className="text-lg text-neutral-800 dark:text-white">{selectedContact.name}</CardTitle>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">Client</p>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">{userType === 'creator' ? 'Client' : 'Creator'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -69,15 +71,28 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
               >
                 <Video size={18} />
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={requestPayment}
-                className="text-neutral-700 dark:text-neutral-200"
-              >
-                <DollarSign size={16} className="mr-1" />
-                Request Payment
-              </Button>
+              {userType === 'creator' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={requestPayment}
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  <DollarSign size={16} className="mr-1" />
+                  Request Payment
+                </Button>
+              )}
+              {userType === 'client' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={requestPayment}
+                  className="text-neutral-700 dark:text-neutral-200"
+                >
+                  <DollarSign size={16} className="mr-1" />
+                  Pay
+                </Button>
+              )}
             </>
           )}
         </div>

@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ClientSidebar from "@/components/ClientSidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +14,7 @@ import { MessageSquare, Send, Search, Video, PhoneCall, Star } from "lucide-reac
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import PaymentDialog from "@/components/messaging/PaymentDialog";
+import MessageHeader from "@/components/messaging/MessageHeader";
 
 type MessageContact = {
   id: string;
@@ -136,6 +138,13 @@ const ClientMessages = () => {
           sender: contact.id,
           timestamp: new Date(Date.now() - 3540000).toISOString(),
           isOwn: false
+        },
+        {
+          id: '3',
+          content: "I've sent you a payment request for our services. Please click here to complete the payment: [Payment Link]",
+          sender: contact.id,
+          timestamp: new Date(Date.now() - 1800000).toISOString(),
+          isOwn: false
         }
       ]);
     } else if (contact.id === '2') {
@@ -235,6 +244,25 @@ const ClientMessages = () => {
     }, 1000);
   };
 
+  // Helper function to detect payment request messages and make them clickable
+  const renderMessageContent = (message: Message) => {
+    if (message.content.includes("payment request") && message.content.includes("[Payment Link]")) {
+      return (
+        <>
+          {message.content.split("[Payment Link]")[0]}
+          <span 
+            className="text-pink-500 underline cursor-pointer" 
+            onClick={processPayment}
+          >
+            [Process Payment]
+          </span>
+        </>
+      );
+    }
+    
+    return message.content;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -316,57 +344,14 @@ const ClientMessages = () => {
               <Card className="md:col-span-2 flex flex-col h-[calc(100vh-240px)]">
                 {selectedContact ? (
                   <>
-                    <CardHeader className="px-6 py-4 border-b flex-shrink-0">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={selectedContact.avatar} alt={selectedContact.name} />
-                            <AvatarFallback>{selectedContact.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <CardTitle className="text-lg text-neutral-800 dark:text-white">{selectedContact.name}</CardTitle>
-                            <p className="text-xs text-neutral-600 dark:text-neutral-400">Creator</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {!isInCall ? (
-                            <>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={initiateCall}
-                                className="h-9 w-9"
-                              >
-                                <PhoneCall size={18} />
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                onClick={initiateCall}
-                                className="h-9 w-9"
-                              >
-                                <Video size={18} />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={processPayment}
-                              >
-                                Pay
-                              </Button>
-                            </>
-                          ) : (
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={endCall}
-                            >
-                              End Call
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
+                    <MessageHeader 
+                      selectedContact={selectedContact}
+                      isInCall={isInCall}
+                      acceptCall={initiateCall}
+                      endCall={endCall}
+                      requestPayment={processPayment}
+                      userType="client"
+                    />
 
                     <CardContent className="p-6 flex-grow overflow-y-auto space-y-4">
                       {isInCall ? (
@@ -423,7 +408,7 @@ const ClientMessages = () => {
                                   : 'bg-muted'
                               }`}
                             >
-                              <p className="text-sm">{message.content}</p>
+                              <p className="text-sm">{renderMessageContent(message)}</p>
                               <span
                                 className={`text-xs block text-right mt-1 ${
                                   message.isOwn ? 'text-pink-100' : 'text-neutral-500 dark:text-neutral-400'
