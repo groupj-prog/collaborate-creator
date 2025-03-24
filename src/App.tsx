@@ -17,6 +17,10 @@ import About from "./pages/About";
 import Jobs from "./pages/Jobs";
 import CreateJob from "./pages/CreateJob";
 import JobDetail from "./pages/JobDetail";
+import CreatorDashboard from "./pages/CreatorDashboard";
+import CreatorPortfolio from "./pages/CreatorPortfolio";
+import CreatorProjects from "./pages/CreatorProjects";
+import CreatorMessages from "./pages/CreatorMessages";
 
 // Create a client instance outside the component
 const queryClient = new QueryClient();
@@ -42,6 +46,10 @@ function App() {
                 <Route path="/jobs" element={<Jobs />} />
                 <Route path="/create-job" element={<CreateJob />} />
                 <Route path="/job/:id" element={<JobDetail />} />
+                <Route path="/creator-dashboard" element={<CreatorDashboard />} />
+                <Route path="/creator-portfolio" element={<CreatorPortfolio />} />
+                <Route path="/creator-projects" element={<CreatorProjects />} />
+                <Route path="/creator-messages" element={<CreatorMessages />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

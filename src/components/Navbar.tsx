@@ -1,16 +1,36 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogOut, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  const [isCreator, setIsCreator] = useState(false);
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('user_type')
+          .eq('id', user.id)
+          .single();
+        
+        setIsCreator(data?.user_type === 'creator');
+      } else {
+        setIsCreator(false);
+      }
+    };
+
+    checkUserRole();
+  }, [user]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +63,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link
             to="/"
@@ -73,14 +92,26 @@ const Navbar = () => {
           </Button>
           <div className="flex items-center space-x-3">
             {user ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px] flex items-center gap-2"
-                onClick={signOut}
-              >
-                <LogOut size={16} /> Logout
-              </Button>
+              <>
+                {isCreator && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
+                    asChild
+                  >
+                    <Link to="/creator-dashboard">Dashboard</Link>
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px] flex items-center gap-2"
+                  onClick={signOut}
+                >
+                  <LogOut size={16} /> Logout
+                </Button>
+              </>
             ) : (
               <>
                 <Button
@@ -103,7 +134,6 @@ const Navbar = () => {
           </div>
         </nav>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-4">
           <Button
             variant="ghost"
@@ -123,7 +153,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 glass p-5 animate-fade-in">
           <nav className="flex flex-col space-y-4">
@@ -150,17 +179,30 @@ const Navbar = () => {
             </Link>
             <div className="flex flex-col space-y-3 pt-3">
               {user ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full flex items-center justify-center gap-2"
-                  onClick={() => {
-                    signOut();
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  <LogOut size={16} /> Logout
-                </Button>
+                <>
+                  {isCreator && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
+                      asChild
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Link to="/creator-dashboard">Dashboard</Link>
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full flex items-center justify-center gap-2"
+                    onClick={() => {
+                      signOut();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <LogOut size={16} /> Logout
+                  </Button>
+                </>
               ) : (
                 <>
                   <Button
