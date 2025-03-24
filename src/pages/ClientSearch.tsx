@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -15,18 +16,29 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList
 } from "@/components/ui/command";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, Filter, Star, ChevronDown } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 // Mock data for creators - will be replaced with real data from Supabase
 type Creator = {
@@ -169,51 +181,42 @@ const ClientSearch = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2"
-                >
-                  <Filter className="h-4 w-4" /> 
-                  Filters
-                </Button>
-              </div>
-              
-              {showFilters && (
-                <Card className="mb-6">
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="flex items-center gap-2"
+                    >
+                      <Filter className="h-4 w-4" /> 
+                      Filters
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent>
+                    <SheetHeader>
+                      <SheetTitle>Filter Creators</SheetTitle>
+                      <SheetDescription>
+                        Filter by skills and rating
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="space-y-6 py-4">
                       <div>
                         <Label className="text-base font-medium mb-2 block">Skills</Label>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-between">
-                              {selectedSkill || "Select a skill"}
-                              <ChevronDown className="h-4 w-4 opacity-50" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56">
-                            <Command>
-                              <CommandInput placeholder="Search skills..." />
-                              <CommandEmpty>No skill found.</CommandEmpty>
-                              <CommandGroup>
-                                {skills.map((skill) => (
-                                  <CommandItem
-                                    key={skill}
-                                    onSelect={() => {
-                                      setSelectedSkill(skill === selectedSkill ? null : skill);
-                                    }}
-                                  >
-                                    {skill}
-                                    {skill === selectedSkill && (
-                                      <span className="ml-auto">✓</span>
-                                    )}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </Command>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Select
+                          value={selectedSkill || ""}
+                          onValueChange={(value) => setSelectedSkill(value === "" ? null : value)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a skill" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">Any Skill</SelectItem>
+                            {skills.map((skill) => (
+                              <SelectItem key={skill} value={skill}>
+                                {skill}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div>
@@ -229,28 +232,27 @@ const ClientSearch = () => {
                           className="py-4"
                         />
                       </div>
+                      
+                      <div className="flex justify-end mt-4 gap-2">
+                        <Button 
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedSkill(null);
+                            setRatingFilter([0]);
+                          }}
+                        >
+                          Clear Filters
+                        </Button>
+                        <SheetClose asChild>
+                          <Button className="bg-pink-500 hover:bg-pink-600">
+                            Apply Filters
+                          </Button>
+                        </SheetClose>
+                      </div>
                     </div>
-                    
-                    <div className="flex justify-end mt-4 gap-2">
-                      <Button 
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedSkill(null);
-                          setRatingFilter([0]);
-                        }}
-                      >
-                        Clear Filters
-                      </Button>
-                      <Button 
-                        onClick={() => setShowFilters(false)}
-                        className="bg-pink-500 hover:bg-pink-600"
-                      >
-                        Apply Filters
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                  </SheetContent>
+                </Sheet>
+              </div>
             </div>
 
             {loading ? (
@@ -361,7 +363,6 @@ const ClientSearch = () => {
                       const matchingSkill = skills.find(s => s.includes(category));
                       if (matchingSkill) {
                         setSelectedSkill(matchingSkill);
-                        setShowFilters(true);
                       }
                     }}
                   >
