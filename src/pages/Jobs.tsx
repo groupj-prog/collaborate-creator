@@ -44,10 +44,10 @@ const Jobs = () => {
     try {
       setLoading(true);
       
+      // Type the query explicitly to avoid infinite type instantiation
       let query = supabase
         .from("jobs")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*");
       
       if (selectedCategory) {
         query = query.eq("category", selectedCategory);
@@ -69,6 +69,9 @@ const Jobs = () => {
             break;
         }
       }
+      
+      // Add ordering after all filters
+      query = query.order("created_at", { ascending: false });
       
       const { data, error } = await query;
       
