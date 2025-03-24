@@ -18,10 +18,10 @@ interface ProfileData {
   full_name: string;
   username: string;
   email: string;
-  bio: string;
-  phone: string;
-  location: string;
-  avatar_url: string;
+  bio: string | null;
+  phone: string | null;
+  location: string | null;
+  avatar_url: string | null;
 }
 
 const ProfilePage = () => {
@@ -33,10 +33,10 @@ const ProfilePage = () => {
     full_name: "",
     username: "",
     email: "",
-    bio: "",
-    phone: "",
-    location: "",
-    avatar_url: "",
+    bio: null,
+    phone: null,
+    location: null,
+    avatar_url: null,
   });
 
   useEffect(() => {
@@ -249,7 +249,7 @@ const ProfilePage = () => {
                       <Textarea
                         id="bio"
                         name="bio"
-                        value={profileData.bio}
+                        value={profileData.bio || ""}
                         onChange={handleInputChange}
                         disabled={!editing}
                         className="min-h-[100px]"
@@ -264,7 +264,7 @@ const ProfilePage = () => {
                         <Input
                           id="phone"
                           name="phone"
-                          value={profileData.phone}
+                          value={profileData.phone || ""}
                           onChange={handleInputChange}
                           disabled={!editing}
                         />
@@ -277,7 +277,7 @@ const ProfilePage = () => {
                         <Input
                           id="location"
                           name="location"
-                          value={profileData.location}
+                          value={profileData.location || ""}
                           onChange={handleInputChange}
                           disabled={!editing}
                         />
