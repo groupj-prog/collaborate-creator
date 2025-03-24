@@ -14,6 +14,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import HowItWorks from "./pages/HowItWorks";
 import About from "./pages/About";
+import Jobs from "./pages/Jobs";
+import CreateJob from "./pages/CreateJob";
+import JobDetail from "./pages/JobDetail";
 
 // Create a client instance outside the component
 const queryClient = new QueryClient();
@@ -36,6 +39,9 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/create-job" element={<CreateJob />} />
+                <Route path="/job/:id" element={<JobDetail />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
