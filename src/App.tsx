@@ -18,6 +18,7 @@ import Jobs from "./pages/Jobs";
 import CreateJob from "./pages/CreateJob";
 import JobDetail from "./pages/JobDetail";
 import CreatorDashboard from "./pages/CreatorDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
 import CreatorPortfolio from "./pages/CreatorPortfolio";
 import CreatorProjects from "./pages/CreatorProjects";
 import CreatorMessages from "./pages/CreatorMessages";
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/creator-messages" element={<CreatorMessages />} />
                 
                 {/* Client routes */}
+                <Route path="/client-dashboard" element={<ClientDashboard />} />
                 <Route path="/client-search" element={<ClientSearch />} />
                 <Route path="/client-messages" element={<ClientMessages />} />
                 <Route path="/client-about" element={<ClientAbout />} />
