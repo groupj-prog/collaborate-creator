@@ -17,7 +17,11 @@ import {
 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 
-type Job = Tables<"jobs">;
+// Extend the Jobs type to include the new fields we added in SQL
+type Job = Tables<"jobs"> & {
+  category?: string | null;
+  deadline?: string | null;
+};
 
 const Jobs = () => {
   const { user } = useAuth();
@@ -72,7 +76,7 @@ const Jobs = () => {
         throw error;
       }
       
-      setJobs(data || []);
+      setJobs(data as Job[] || []);
     } catch (error: any) {
       toast({
         title: "Error fetching jobs",

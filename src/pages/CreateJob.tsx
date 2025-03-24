@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -61,6 +60,7 @@ const CreateJob = () => {
     }
   }, [authLoading, user, navigate]);
   
+  // Ensure we're passing the new fields to the database
   const onSubmit = async (values: JobFormValues) => {
     if (!user) {
       toast({

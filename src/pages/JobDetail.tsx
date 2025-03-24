@@ -11,7 +11,10 @@ import Footer from "@/components/Footer";
 import { Calendar, DollarSign, Tag, User, Clock } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 
+// Extend the Jobs type to include the new fields we added in SQL
 type Job = Tables<"jobs"> & {
+  category?: string | null;
+  deadline?: string | null;
   profiles?: {
     username: string | null;
     full_name: string | null;
@@ -62,7 +65,7 @@ const JobDetail = () => {
         return;
       }
       
-      setJob(jobData);
+      setJob(jobData as Job);
       
       // If there's a client_id, fetch client details
       if (jobData.client_id) {
