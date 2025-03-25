@@ -14,7 +14,7 @@ const HowItWorks: React.FC = () => {
         <section className="pt-32 pb-16 px-6 bg-neutral-50">
           <div className="container mx-auto text-center max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 fade-in-hidden animate-fade-in">
-              How ConnectHub Works
+              How TalentBazaar Works
             </h1>
             <p className="text-lg text-neutral-600 mb-8 fade-in-hidden animate-fade-in animation-delay-200">
               Our platform connects clients and creators through a streamlined process designed for efficiency, quality, and trust.

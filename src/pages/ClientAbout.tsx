@@ -43,7 +43,7 @@ const ClientAbout = () => {
         <ClientSidebar />
         <main className="flex-1 ml-64 pt-24 pb-16 px-8">
           <div className="max-w-5xl mx-auto">
-            <h1 className="text-3xl font-bold mb-2">About ConnectHub</h1>
+            <h1 className="text-3xl font-bold mb-2">About TalentBazaar</h1>
             <p className="text-muted-foreground mb-8">
               Learn more about our platform and how it connects clients with creators.
             </p>
@@ -54,12 +54,12 @@ const ClientAbout = () => {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">
-                  ConnectHub is a platform dedicated to connecting clients with talented creators across various disciplines. 
+                  TalentBazaar is a platform dedicated to connecting clients with talented creators across various disciplines. 
                   Our mission is to make collaboration seamless, efficient, and rewarding for both parties.
                 </p>
                 <p>
                   Whether you're looking for a web developer, designer, writer, or marketer, 
-                  ConnectHub provides the tools and resources to find the perfect match for your project needs.
+                  TalentBazaar provides the tools and resources to find the perfect match for your project needs.
                 </p>
               </CardContent>
             </Card>
@@ -102,10 +102,10 @@ const ClientAbout = () => {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">
-                  Need help with using ConnectHub? Our support team is here to assist you.
+                  Need help with using TalentBazaar? Our support team is here to assist you.
                 </p>
                 <p className="text-muted-foreground">
-                  Contact us at support@connecthub.com or use the help center for common questions.
+                  Contact us at support@talentbazaar.com or use the help center for common questions.
                 </p>
               </CardContent>
             </Card>

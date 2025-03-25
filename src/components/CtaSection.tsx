@@ -24,7 +24,7 @@ const CtaSection: React.FC = () => {
           </h2>
           
           <p className="text-neutral-800 mb-8 max-w-2xl mx-auto fade-in-hidden animate-fade-in animation-delay-200">
-            Whether you're looking to hire talent or showcase your skills, ConnectHub makes the process seamless, secure, and successful.
+            Whether you're looking to hire talent or showcase your skills, TalentBazaar makes the process seamless, secure, and successful.
           </p>
           
           {!user && (
