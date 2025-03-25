@@ -93,7 +93,7 @@ const HowItWorksSection: React.FC = () => {
       <div className="container mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-16 fade-in-hidden animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-            How ConnectHub Works
+            How TalentBazaar Works
           </h2>
           <p className="text-neutral-600 max-w-2xl mx-auto">
             Our simple yet powerful process connects clients with talented creators in just a few steps.
