@@ -84,15 +84,15 @@ const SettingsPage = () => {
               <Settings className="h-8 w-8 text-muted-foreground" />
             </div>
 
-            <Tabs defaultValue="appearance" className="w-full">
-              <TabsList className="mb-6">
+            <Tabs defaultValue="appearance" className="w-full flex flex-col space-y-6">
+              <TabsList className="self-start">
                 <TabsTrigger value="appearance">Appearance</TabsTrigger>
                 <TabsTrigger value="notifications">Notifications</TabsTrigger>
                 <TabsTrigger value="security">Security</TabsTrigger>
                 <TabsTrigger value="account">Account</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="appearance" className="space-y-6">
+              <TabsContent value="appearance" className="w-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Theme</CardTitle>
@@ -113,7 +113,7 @@ const SettingsPage = () => {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="notifications" className="space-y-6">
+              <TabsContent value="notifications" className="w-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Notification Preferences</CardTitle>
@@ -153,7 +153,7 @@ const SettingsPage = () => {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="security" className="space-y-6">
+              <TabsContent value="security" className="w-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Security Settings</CardTitle>
@@ -175,7 +175,7 @@ const SettingsPage = () => {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="account" className="space-y-6">
+              <TabsContent value="account" className="w-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Account Management</CardTitle>
