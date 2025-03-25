@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -6,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ClientSidebar from "@/components/ClientSidebar";
+import CreatorSidebar from "@/components/CreatorSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ interface ProfileData {
   bio: string | null;
   location: string | null;
   avatar_url: string | null;
+  user_type: string | null;
 }
 
 const ProfilePage = () => {
@@ -28,6 +29,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     full_name: "",
     username: "",
@@ -35,6 +37,7 @@ const ProfilePage = () => {
     bio: null,
     location: null,
     avatar_url: null,
+    user_type: null,
   });
 
   useEffect(() => {
@@ -59,6 +62,8 @@ const ProfilePage = () => {
         // Get user email from auth
         const { data: userData } = await supabase.auth.getUser();
 
+        setIsCreator(profileData?.user_type === 'creator');
+        
         setProfileData({
           full_name: profileData?.full_name || "",
           username: profileData?.username || "",
@@ -66,6 +71,7 @@ const ProfilePage = () => {
           bio: profileData?.bio || "",
           location: profileData?.location || "",
           avatar_url: profileData?.avatar_url || "",
+          user_type: profileData?.user_type || null,
         });
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -131,7 +137,7 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="flex">
-        <ClientSidebar />
+        {isCreator ? <CreatorSidebar /> : <ClientSidebar />}
         <main className="flex-1 ml-64 pt-24 pb-16 px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-8">
