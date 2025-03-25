@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogOut, Moon, Sun } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,8 +12,10 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
 
   const [isCreator, setIsCreator] = useState(false);
+  const isCreatorProfilePage = location.pathname.includes('/creator-profile/');
 
   useEffect(() => {
     const checkUserRole = async () => {
@@ -113,14 +115,16 @@ const Navbar = () => {
                     >
                       <Link to="/client-dashboard">Dashboard</Link>
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
-                      asChild
-                    >
-                      <Link to="/client-search">Find Creators</Link>
-                    </Button>
+                    {!isCreatorProfilePage && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full transition-all duration-200 hover:bg-pink-50 border-[1.5px]"
+                        asChild
+                      >
+                        <Link to="/client-search">Find Creators</Link>
+                      </Button>
+                    )}
                   </>
                 )}
                 <Button
@@ -221,15 +225,17 @@ const Navbar = () => {
                       >
                         <Link to="/client-dashboard">Dashboard</Link>
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
-                        asChild
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <Link to="/client-search">Find Creators</Link>
-                      </Button>
+                      {!isCreatorProfilePage && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full transition-all duration-200 hover:bg-pink-50 w-full"
+                          asChild
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <Link to="/client-search">Find Creators</Link>
+                        </Button>
+                      )}
                     </>
                   )}
                   <Button
