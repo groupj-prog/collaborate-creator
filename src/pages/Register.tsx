@@ -171,10 +171,10 @@ const Register: React.FC = () => {
           
           <div className="glass-card p-8">
             <div className="text-center mb-10 fade-in-hidden animate-fade-in">
-              <h1 className="text-3xl font-semibold mb-3">Join ConnectHub</h1>
+              <h1 className="text-3xl font-semibold mb-3">Join TalentBazaar</h1>
               {step === 1 ? (
                 <p className="text-neutral-600 dark:text-neutral-400">
-                  First, let us know how you'd like to use ConnectHub
+                  First, let us know how you'd like to use TalentBazaar
                 </p>
               ) : (
                 <p className="text-neutral-600 dark:text-neutral-400">

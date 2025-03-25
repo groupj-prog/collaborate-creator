@@ -83,7 +83,7 @@ const Login: React.FC = () => {
             <div className="text-center mb-8 fade-in-hidden animate-fade-in">
               <h1 className="text-2xl font-semibold mb-2">Welcome back</h1>
               <p className="text-neutral-600 dark:text-neutral-400 text-sm">
-                Log in to continue to ConnectHub
+                Log in to continue to TalentBazaar
               </p>
             </div>
             
