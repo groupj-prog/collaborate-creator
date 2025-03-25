@@ -5,6 +5,7 @@ import AppearanceSettings from "./AppearanceSettings";
 import NotificationSettings from "./NotificationSettings";
 import SecuritySettings from "./SecuritySettings";
 import AccountSettings from "./AccountSettings";
+import PrivacyAndTerms from "./PrivacyAndTerms";
 
 const SettingsTabs = () => {
   return (
@@ -14,6 +15,7 @@ const SettingsTabs = () => {
         <TabsTrigger value="notifications">Notifications</TabsTrigger>
         <TabsTrigger value="security">Security</TabsTrigger>
         <TabsTrigger value="account">Account</TabsTrigger>
+        <TabsTrigger value="privacy">Privacy & Terms</TabsTrigger>
       </TabsList>
 
       <TabsContent value="appearance" className="w-full">
@@ -30,6 +32,10 @@ const SettingsTabs = () => {
 
       <TabsContent value="account" className="w-full">
         <AccountSettings />
+      </TabsContent>
+      
+      <TabsContent value="privacy" className="w-full">
+        <PrivacyAndTerms />
       </TabsContent>
     </Tabs>
   );

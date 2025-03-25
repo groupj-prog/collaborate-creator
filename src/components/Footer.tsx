@@ -9,11 +9,11 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-semibold">Connect</span>
-              <span className="text-xl font-semibold text-pink-500">Hub</span>
+              <span className="text-xl font-semibold">Talent</span>
+              <span className="text-xl font-semibold text-pink-500">Bazaar</span>
             </Link>
             <p className="mt-4 text-sm text-neutral-600 max-w-xs">
-              ConnectHub brings together clients and digital creators for seamless collaboration and exceptional results.
+              TalentBazaar brings together clients and digital creators for seamless collaboration and exceptional results.
             </p>
           </div>
           
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-12 pt-8 border-t border-neutral-100 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-neutral-500">
-            &copy; {new Date().getFullYear()} ConnectHub. All rights reserved.
+            &copy; {new Date().getFullYear()} TalentBazaar. All rights reserved.
           </p>
           
           <div className="mt-4 md:mt-0 flex space-x-6">

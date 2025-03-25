@@ -39,7 +39,7 @@ const NotificationSettings = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...form}>
-          <div className="space-y-4">
+          <form className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="text-base font-medium">Email Notifications</div>
@@ -61,7 +61,7 @@ const NotificationSettings = () => {
                 onCheckedChange={setMarketingEmails} 
               />
             </div>
-          </div>
+          </form>
         </Form>
         
         <div className="pt-4">
