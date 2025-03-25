@@ -27,6 +27,7 @@ import ClientMessages from "./pages/ClientMessages";
 import ClientAbout from "./pages/ClientAbout";
 import CreatorProfileView from "./pages/CreatorProfileView";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 
 // Create a client instance outside the component
 const queryClient = new QueryClient();
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/client-about" element={<ClientAbout />} />
                 <Route path="/creator-profile/:id" element={<CreatorProfileView />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
